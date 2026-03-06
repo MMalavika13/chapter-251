@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+height:100vh;
+}
+
+.text{
+position:absolute;
+width:340px;
+font-size:26px;
+opacity:0;
+line-height:1.55;
+transition:opacity 1s ease;
+}
+
+.center{
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+width:580px;
+font-size:32px;
+color:rgba(220,210,255,0.95);
+text-shadow:0 0 50px rgba(200,180,255,0.2);
+}
+
+.topleft{ top:13%; left:8%; }
+.topright{ top:13%; right:8%; }
+.bottomright{ bottom:13%; right:8%; }
+.bottomleft{ bottom:13%; left:8%; }
+
+/* subtle corner line accent */
+.text::before{
+content:'—';
+display:block;
+font-size:16px;
+color:rgba(180,160,255,0.4);
+margin-bottom:10px;
+letter-spacing:4px;
+}
+
+.center::before{ display:none; }
+
+@media(max-width:768px){
+.text{
+width:80%;
+left:50%!important;
+right:auto!important;
+top:50%!important;
+bottom:auto!important;
+transform:translate(-50%,-50%)!important;
+text-align:center;
+font-size:20px;
+}
+.center{ width:90%; font-size:22px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="tr" class="text topright"></div>
+<div id="tl" class="text topleft"></div>
+<div id="bl" class="text bottomleft"></div>
+<div id="br" class="text bottomright"></div>
+<div id="center" class="text center"></div>
+
+<script>
+
+function typeText(el, text, speed = 32){
+return new Promise(res => {
+el.innerHTML = ""
+el.style.opacity = 1
+let i = 0
+function t(){
+if(i < text.length){
+el.innerHTML += text[i]
+i++
+setTimeout(t, speed)
+}else res()
+}
+t()
+})
+}
+
+async function showSentence(el, text){
+await typeText(el, text)
+await new Promise(r => setTimeout(r, 2000))
+el.style.opacity = 0
+await new Promise(r => setTimeout(r, 850))
+}
+
+async function start(){
+
+await showSentence(
+document.getElementById("tr"),
+"Despite our best intentions, sometimes we hurt people."
+)
+
+await showSentence(
+document.getElementById("tl"),
+"And sometimes we end up getting hurt too."
+)
+
+await showSentence(
+document.getElementById("bl"),
+"Just human things."
+)
+
+await showSentence(
+document.getElementById("br"),
+"Looking back now, it is easy to judge who we once were."
+)
+
+await typeText(
+document.getElementById("center"),
+"But back then, we were simply doing the best we could with what we knew."
+)
+
+}
+
+start()
+
+</script>
+</body>
+</html>

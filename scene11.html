@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+margin:0;
+font-family:'Space Mono',monospace;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+gap:48px;
+}
+
+#text{
+font-size:36px;
+max-width:700px;
+line-height:1.55;
+transition:opacity 0.9s;
+}
+
+.small{
+font-size:22px;
+opacity:0;
+margin-top:18px;
+color:rgba(255,255,255,0.55);
+transition:opacity 0.8s ease;
+letter-spacing:1px;
+}
+
+/* Alexa ring */
+#ring{
+width:80px;
+height:80px;
+border-radius:50%;
+border:4px solid rgba(0,120,255,0.15);
+position:relative;
+opacity:0;
+transition:opacity 0.8s ease;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+#ring::before{
+content:'';
+position:absolute;
+width:100%;
+height:100%;
+border-radius:50%;
+border:4px solid transparent;
+border-top-color:rgba(0,160,255,0.9);
+animation:ringPulse 1.4s linear infinite;
+box-shadow:0 0 24px rgba(0,160,255,0.5);
+}
+
+#ring::after{
+content:'';
+position:absolute;
+width:60%;
+height:60%;
+border-radius:50%;
+background:rgba(0,120,255,0.12);
+border:2px solid rgba(0,160,255,0.3);
+}
+
+@keyframes ringPulse{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
+}
+
+.listening #ring::before{
+border-top-color:rgba(0,200,255,0.95);
+animation-duration:0.8s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="ring"></div>
+<div id="text"></div>
+
+<script>
+
+const sentences = [
+"Okay, the music needs to change :P",
+"Alexa, play Ilahi from Yeh Jawani Hai Deewani."
+]
+
+let sentenceIndex = 0
+let charIndex     = 0
+const textEl      = document.getElementById("text")
+const ring        = document.getElementById("ring")
+
+function type(){
+const sentence = sentences[sentenceIndex]
+if(charIndex < sentence.length){
+textEl.innerHTML += sentence.charAt(charIndex)
+charIndex++
+setTimeout(type, 40)
+}else{
+if(sentenceIndex === sentences.length - 1){
+setTimeout(alexaResponse, 700)
+return
+}
+setTimeout(()=>{
+textEl.style.opacity = 0
+setTimeout(()=>{
+textEl.innerHTML   = ""
+textEl.style.opacity = 1
+sentenceIndex++
+charIndex = 0
+type()
+/* show ring when asking Alexa */
+ring.style.opacity = 1
+}, 800)
+}, 1400)
+}
+}
+
+function alexaResponse(){
+document.body.classList.add("listening")
+const listening = document.createElement("div")
+listening.className = "small"
+listening.textContent = "Listening..."
+textEl.appendChild(listening)
+setTimeout(()=>{ listening.style.opacity = 1 }, 50)
+
+setTimeout(()=>{
+listening.textContent = "Playing Ilahi from Yeh Jawani Hai Deewani"
+listening.style.color = "rgba(100,220,255,0.8)"
+document.body.classList.remove("listening")
+ring.style.border = "4px solid rgba(100,220,255,0.3)"
+parent.postMessage("changeMusic","*")
+}, 1200)
+}
+
+type()
+
+</script>
+</body>
+</html>

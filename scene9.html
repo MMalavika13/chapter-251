@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+}
+
+#text{
+font-size:40px;
+opacity:0;
+transition:opacity 1.6s ease;
+margin-bottom:56px;
+text-align:center;
+line-height:1.55;
+color:rgba(220,210,255,0.85);
+}
+
+.stage{
+position:relative;
+width:1000px;
+height:400px;
+}
+
+/* characters */
+
+.charWrap{
+position:absolute;
+}
+
+#boyWrap{ left:90px; top:50px; }
+#girlWrap{ right:90px; top:50px; }
+
+.character{
+filter:drop-shadow(0 0 6px rgba(255,255,255,0.2));
+}
+
+.turnBoy{
+transform:rotate(10deg);
+transform-origin:110px 80px;
+transition:transform 0.7s ease;
+}
+
+.turnGirl{
+transform:rotate(-10deg);
+transform-origin:110px 80px;
+transition:transform 0.7s ease;
+}
+
+/* bubbles */
+
+.bubble{
+position:absolute;
+opacity:0;
+transition:opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+transform:scale(0.8) translateY(6px);
+}
+
+.bubble.show{
+opacity:1;
+transform:scale(1) translateY(0);
+}
+
+#bubbleBoy{
+top:58px;
+left:130px;
+}
+
+#bubbleGirl{
+top:58px;
+right:0px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="text">
+So yeah…<br>
+We kinda messed that up.
+</div>
+
+<div class="stage">
+
+<!-- BOY -->
+<div id="boyWrap" class="charWrap">
+
+<div id="bubbleBoy" class="bubble">
+<svg width="110" height="34">
+<rect x="2" y="2" width="106" height="30" rx="15"
+stroke="rgba(255,100,100,0.6)" stroke-width="1.5"
+fill="rgba(255,80,80,0.07)"/>
+<text x="55" y="21" text-anchor="middle" fill="rgba(255,130,130,0.9)"
+font-family="Space Mono,monospace" font-size="11" letter-spacing="1">Blocked</text>
+</svg>
+</div>
+
+<svg id="boy" class="character" width="220" height="280">
+<circle cx="110" cy="40" r="13" stroke="white" stroke-width="3" fill="none"/>
+<line x1="110" y1="53" x2="110" y2="132" stroke="white" stroke-width="3"/>
+<line x1="110" y1="132" x2="90" y2="214" stroke="white" stroke-width="3"/>
+<line x1="110" y1="132" x2="130" y2="214" stroke="white" stroke-width="3"/>
+<line x1="110" y1="82" x2="80" y2="112" stroke="white" stroke-width="3"/>
+<line x1="110" y1="82" x2="150" y2="112" stroke="white" stroke-width="3"/>
+<rect x="148" y="102" width="20" height="36" rx="4"
+stroke="rgba(80,180,255,0.5)" stroke-width="2" fill="rgba(80,180,255,0.06)"/>
+</svg>
+
+</div>
+
+<!-- GIRL -->
+<div id="girlWrap" class="charWrap">
+
+<div id="bubbleGirl" class="bubble">
+<svg width="130" height="34">
+<rect x="2" y="2" width="126" height="30" rx="15"
+stroke="rgba(255,100,100,0.6)" stroke-width="1.5"
+fill="rgba(255,80,80,0.07)"/>
+<text x="65" y="21" text-anchor="middle" fill="rgba(255,130,130,0.9)"
+font-family="Space Mono,monospace" font-size="11" letter-spacing="1">Unfollowed</text>
+</svg>
+</div>
+
+<svg id="girl" class="character" width="220" height="280">
+<circle cx="110" cy="40" r="13" stroke="white" stroke-width="3" fill="none"/>
+<path d="M123 40 Q138 30 150 40" stroke="white" stroke-width="2.5" fill="none"/>
+<line x1="110" y1="53" x2="110" y2="132" stroke="white" stroke-width="3"/>
+<line x1="110" y1="132" x2="90" y2="214" stroke="white" stroke-width="3"/>
+<line x1="110" y1="132" x2="130" y2="214" stroke="white" stroke-width="3"/>
+<line x1="110" y1="82" x2="140" y2="112" stroke="white" stroke-width="3"/>
+<line x1="110" y1="82" x2="70" y2="112" stroke="white" stroke-width="3"/>
+<rect x="50" y="102" width="20" height="36" rx="4"
+stroke="rgba(80,180,255,0.5)" stroke-width="2" fill="rgba(80,180,255,0.06)"/>
+</svg>
+
+</div>
+
+</div>
+
+<script>
+
+setTimeout(()=> document.getElementById("text").style.opacity = 1, 600)
+
+setTimeout(()=> document.getElementById("bubbleGirl").classList.add("show"), 2400)
+
+setTimeout(()=> document.getElementById("girl").classList.add("turnGirl"), 3200)
+
+setTimeout(()=> document.getElementById("bubbleBoy").classList.add("show"), 4400)
+
+setTimeout(()=> document.getElementById("boy").classList.add("turnBoy"), 5200)
+
+</script>
+</body>
+</html>

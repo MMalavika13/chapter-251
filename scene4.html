@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+}
+
+#text{
+font-size:40px;
+margin-bottom:60px;
+border-right:3px solid rgba(255,255,255,0.8);
+padding-right:10px;
+white-space:nowrap;
+animation:cursorBlink 1s step-end infinite;
+min-height:1.2em;
+}
+
+@keyframes cursorBlink{
+0%,100%{ border-color:rgba(255,255,255,0.8); }
+50%{ border-color:transparent; }
+}
+
+.done{ border-color:transparent !important; animation:none !important; }
+
+.stage{
+position:relative;
+width:900px;
+height:320px;
+}
+
+.character{
+position:absolute;
+top:80px;
+transition:transform 0.5s ease;
+filter:drop-shadow(0 0 5px rgba(255,255,255,0.2));
+}
+
+#boy{ left:180px; }
+#girl{ right:180px; }
+
+/* phone */
+#phone{
+position:absolute;
+left:50%;
+top:100px;
+transform:translateX(-50%) scale(0);
+transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+filter:drop-shadow(0 0 10px rgba(100,180,255,0.4));
+}
+
+/* dots */
+#typing{
+position:absolute;
+left:50%;
+top:196px;
+transform:translateX(-50%);
+font-size:36px;
+opacity:0;
+letter-spacing:6px;
+transition:opacity 0.3s;
+color:rgba(255,255,255,0.6);
+}
+
+/* message bubble */
+#bubble{
+position:absolute;
+left:50%;
+top:230px;
+transform:translateX(-50%);
+opacity:0;
+transition:opacity 0.35s;
+}
+
+#msgText{
+fill:#eeeeff;
+font-family:'Space Mono',monospace;
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="text"></div>
+
+<div class="stage">
+
+<!-- boy -->
+<svg id="boy" class="character" width="120" height="160">
+<circle cx="60" cy="30" r="13" stroke="white" stroke-width="3" fill="none"/>
+<line x1="60" y1="43" x2="60" y2="96" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="40" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="80" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="44" y2="132" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="76" y2="132" stroke="white" stroke-width="3"/>
+</svg>
+
+<!-- girl -->
+<svg id="girl" class="character" width="140" height="160">
+<circle cx="60" cy="30" r="13" stroke="white" stroke-width="3" fill="none"/>
+<path d="M73 30 Q85 20 97 28 Q109 36 121 28" stroke="white" stroke-width="2.5" fill="none"/>
+<line x1="60" y1="43" x2="60" y2="96" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="40" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="80" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="44" y2="132" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="76" y2="132" stroke="white" stroke-width="3"/>
+</svg>
+
+<!-- phone -->
+<svg id="phone" width="52" height="84">
+<rect x="4" y="4" width="44" height="76" rx="6"
+stroke="white" stroke-width="2.5" fill="rgba(255,255,255,0.04)"/>
+<rect x="14" y="10" width="24" height="3" rx="2" fill="rgba(255,255,255,0.3)"/>
+<!-- screen glow -->
+<rect x="8" y="18" width="36" height="48" rx="3"
+fill="rgba(80,180,255,0.08)" stroke="rgba(80,180,255,0.2)" stroke-width="1"/>
+</svg>
+
+<!-- typing dots -->
+<div id="typing">. . .</div>
+
+<!-- message bubble -->
+<svg id="bubble" width="180" height="52">
+<rect x="4" y="4" width="172" height="44" rx="22"
+stroke="rgba(255,255,255,0.4)" stroke-width="1.5"
+fill="rgba(255,255,255,0.06)"/>
+<text id="msgText" x="90" y="31" text-anchor="middle">hi</text>
+</svg>
+
+</div>
+
+<script>
+
+const sentence = "Baad mein sab awkward ho jayega"
+const textEl   = document.getElementById("text")
+let i = 0
+
+function typeText(){
+if(i < sentence.length){
+textEl.textContent += sentence.charAt(i)
+i++
+setTimeout(typeText, 68)
+}else{
+textEl.classList.add("done")
+setTimeout(startScene, 500)
+}
+}
+typeText()
+
+function startScene(){
+
+/* phone appears */
+setTimeout(()=>{ document.getElementById("phone").style.transform="translateX(-50%) scale(1)" }, 0)
+
+/* boy checks phone */
+setTimeout(()=>{ document.getElementById("boy").style.transform="rotate(14deg)" }, 320)
+
+/* girl checks phone */
+setTimeout(()=>{ document.getElementById("girl").style.transform="rotate(-14deg)" }, 620)
+
+/* typing */
+setTimeout(()=>{ document.getElementById("typing").style.opacity=1 }, 1000)
+setTimeout(()=>{ document.getElementById("typing").style.opacity=0 }, 1800)
+
+/* message 1 */
+setTimeout(()=>{
+document.getElementById("msgText").textContent="hi"
+document.getElementById("bubble").style.opacity=1
+}, 2100)
+setTimeout(()=>{ document.getElementById("bubble").style.opacity=0 }, 2900)
+
+/* typing again */
+setTimeout(()=>{ document.getElementById("typing").style.opacity=1 }, 3200)
+setTimeout(()=>{ document.getElementById("typing").style.opacity=0 }, 4100)
+
+/* message 2 */
+setTimeout(()=>{
+document.getElementById("msgText").textContent="hey..."
+document.getElementById("bubble").style.opacity=1
+}, 4400)
+
+/* look away awkwardly */
+setTimeout(()=>{
+document.getElementById("boy").style.transform="rotate(-22deg)"
+document.getElementById("girl").style.transform="rotate(22deg)"
+}, 5300)
+
+}
+
+</script>
+</body>
+</html>

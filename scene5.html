@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+}
+
+#text{
+font-size:48px;
+margin-bottom:64px;
+border-right:3px solid rgba(255,255,255,0.8);
+padding-right:10px;
+white-space:nowrap;
+animation:cursorBlink 1s step-end infinite;
+min-height:1.2em;
+}
+
+@keyframes cursorBlink{
+0%,100%{ border-color:rgba(255,255,255,0.8); }
+50%{ border-color:transparent; }
+}
+
+.done{ border-color:transparent !important; animation:none !important; }
+
+.stage{
+position:relative;
+width:800px;
+height:300px;
+}
+
+.character{
+position:absolute;
+top:100px;
+transition:all 0.65s cubic-bezier(0.22,1,0.36,1);
+filter:drop-shadow(0 0 5px rgba(255,255,255,0.2));
+}
+
+#boy{ left:180px; }
+#girl{ right:180px; }
+
+.inflate{
+transform:scale(1.18) translateY(-8px);
+}
+
+.arrogant{
+transform:scale(1.18) translateY(-16px);
+}
+
+.turnLeft{
+transform:rotate(-38deg) scale(0.95);
+}
+
+.turnRight{
+transform:rotate(38deg) scale(0.95);
+}
+
+#wall{
+position:absolute;
+left:50%;
+top:40px;
+width:3px;
+height:0;
+transform:translateX(-50%);
+transition:height 0.7s cubic-bezier(0.22,1,0.36,1);
+background:linear-gradient(to bottom, transparent, rgba(255,255,255,0.9), rgba(200,190,255,0.6));
+box-shadow:0 0 18px rgba(200,180,255,0.5), 0 0 40px rgba(180,150,255,0.2);
+}
+
+@keyframes shakeBody{
+0%  { transform:translate(0,0); }
+20% { transform:translate(-7px,3px); }
+40% { transform:translate(7px,-3px); }
+60% { transform:translate(-5px,5px); }
+80% { transform:translate(5px,-2px); }
+100%{ transform:translate(0,0); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="text"></div>
+
+<div class="stage">
+
+<div id="wall"></div>
+
+<!-- boy -->
+<svg id="boy" class="character" width="120" height="160">
+<circle cx="60" cy="30" r="13" stroke="white" stroke-width="3" fill="none"/>
+<line x1="60" y1="43" x2="60" y2="96" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="40" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="80" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="44" y2="132" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="76" y2="132" stroke="white" stroke-width="3"/>
+</svg>
+
+<!-- girl -->
+<svg id="girl" class="character" width="140" height="160">
+<circle cx="60" cy="30" r="13" stroke="white" stroke-width="3" fill="none"/>
+<path d="M73 30 Q85 20 97 28 Q109 36 121 28" stroke="white" stroke-width="2.5" fill="none"/>
+<line x1="60" y1="43" x2="60" y2="96" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="40" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="62" x2="80" y2="78" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="44" y2="132" stroke="white" stroke-width="3"/>
+<line x1="60" y1="96" x2="76" y2="132" stroke="white" stroke-width="3"/>
+</svg>
+
+</div>
+
+<script>
+
+const sentence = "Ego badh jayega"
+const textEl   = document.getElementById("text")
+let i = 0
+
+function typeText(){
+if(i < sentence.length){
+textEl.textContent += sentence.charAt(i)
+i++
+setTimeout(typeText, 80)
+}else{
+textEl.classList.add("done")
+setTimeout(startEgo, 500)
+}
+}
+typeText()
+
+function startEgo(){
+
+setTimeout(()=>{
+document.getElementById("boy").classList.add("inflate")
+document.getElementById("girl").classList.add("inflate")
+}, 0)
+
+setTimeout(()=>{
+document.getElementById("boy").classList.replace("inflate","arrogant")
+document.getElementById("girl").classList.replace("inflate","arrogant")
+}, 700)
+
+setTimeout(()=>{
+document.getElementById("boy").classList.remove("arrogant")
+document.getElementById("girl").classList.remove("arrogant")
+document.getElementById("boy").classList.add("turnLeft")
+document.getElementById("girl").classList.add("turnRight")
+}, 1400)
+
+setTimeout(()=>{
+document.getElementById("wall").style.height = "220px"
+document.body.style.animation = "shakeBody 0.4s ease"
+}, 2100)
+
+}
+
+</script>
+</body>
+</html>

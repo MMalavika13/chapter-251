@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+}
+
+#text{
+font-size:44px;
+margin-bottom:60px;
+border-right:3px solid rgba(255,255,255,0.8);
+padding-right:10px;
+white-space:nowrap;
+animation:cursorBlink 1s step-end infinite;
+min-height:1.2em;
+}
+
+@keyframes cursorBlink{
+0%,100%{ border-color:rgba(255,255,255,0.8); }
+50%{ border-color:transparent; }
+}
+
+.done{ border-color:transparent !important; animation:none !important; }
+
+.stage{
+position:relative;
+width:900px;
+height:320px;
+}
+
+.character{
+position:absolute;
+transition:all 1s cubic-bezier(0.22,1,0.36,1);
+filter:drop-shadow(0 0 5px rgba(255,255,255,0.2));
+}
+
+#boy{ left:240px; top:110px; }
+#girl{ right:240px; top:110px; }
+
+.old{
+transform:rotate(28deg) translateY(22px);
+filter:drop-shadow(0 0 3px rgba(180,180,220,0.3));
+}
+
+.glasses{
+opacity:0;
+transition:opacity 0.7s;
+}
+
+.hair{
+opacity:0;
+transition:opacity 0.7s;
+}
+
+.stick{
+opacity:0;
+transition:opacity 0.7s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="text"></div>
+
+<div class="stage">
+
+<!-- BOY -->
+<svg id="boy" class="character" width="140" height="200">
+<circle cx="70" cy="40" r="13" stroke="white" stroke-width="3" fill="none"/>
+<!-- glasses -->
+<circle id="boyGlass1" class="glasses" cx="64" cy="40" r="6" stroke="rgba(200,200,255,0.9)" stroke-width="2" fill="none"/>
+<circle id="boyGlass2" class="glasses" cx="77" cy="40" r="6" stroke="rgba(200,200,255,0.9)" stroke-width="2" fill="none"/>
+<line id="boyGlassBridge" class="glasses" x1="70" y1="40" x2="71" y2="40" stroke="rgba(200,200,255,0.9)" stroke-width="2"/>
+<!-- white hair -->
+<line id="boyHair" class="hair" x1="57" y1="28" x2="83" y2="28" stroke="rgba(230,230,255,0.8)" stroke-width="4"/>
+<!-- body -->
+<line x1="70" y1="53" x2="70" y2="112" stroke="white" stroke-width="3"/>
+<!-- arms -->
+<line x1="70" y1="72" x2="50" y2="97" stroke="white" stroke-width="3"/>
+<line x1="70" y1="72" x2="90" y2="97" stroke="white" stroke-width="3"/>
+<!-- legs -->
+<line x1="70" y1="112" x2="54" y2="152" stroke="white" stroke-width="3"/>
+<line x1="70" y1="112" x2="86" y2="152" stroke="white" stroke-width="3"/>
+<!-- walking stick -->
+<line id="stickBoy" class="stick" x1="50" y1="97" x2="50" y2="165" stroke="rgba(200,200,255,0.7)" stroke-width="4"/>
+</svg>
+
+<!-- GIRL -->
+<svg id="girl" class="character" width="140" height="200">
+<circle cx="70" cy="40" r="13" stroke="white" stroke-width="3" fill="none"/>
+<!-- pony -->
+<path d="M83 40 Q95 30 107 38 Q119 46 131 38" stroke="white" stroke-width="2.5" fill="none"/>
+<!-- glasses -->
+<circle id="girlGlass1" class="glasses" cx="64" cy="40" r="6" stroke="rgba(200,200,255,0.9)" stroke-width="2" fill="none"/>
+<circle id="girlGlass2" class="glasses" cx="77" cy="40" r="6" stroke="rgba(200,200,255,0.9)" stroke-width="2" fill="none"/>
+<!-- white hair -->
+<line id="girlHair" class="hair" x1="57" y1="28" x2="83" y2="28" stroke="rgba(230,230,255,0.8)" stroke-width="4"/>
+<!-- body -->
+<line x1="70" y1="53" x2="70" y2="112" stroke="white" stroke-width="3"/>
+<!-- arms -->
+<line x1="70" y1="72" x2="50" y2="97" stroke="white" stroke-width="3"/>
+<line x1="70" y1="72" x2="90" y2="97" stroke="white" stroke-width="3"/>
+<!-- legs -->
+<line x1="70" y1="112" x2="54" y2="152" stroke="white" stroke-width="3"/>
+<line x1="70" y1="112" x2="86" y2="152" stroke="white" stroke-width="3"/>
+<!-- walking stick -->
+<line id="stickGirl" class="stick" x1="90" y1="97" x2="90" y2="165" stroke="rgba(200,200,255,0.7)" stroke-width="4"/>
+</svg>
+
+</div>
+
+<script>
+
+const sentence = "Hum boodhe ho jayenge"
+const textEl   = document.getElementById("text")
+let i = 0
+
+function typeText(){
+if(i < sentence.length){
+textEl.textContent += sentence.charAt(i)
+i++
+setTimeout(typeText, 78)
+}else{
+textEl.classList.add("done")
+setTimeout(ageScene, 500)
+}
+}
+typeText()
+
+function ageScene(){
+
+/* glasses appear */
+setTimeout(()=>{
+document.querySelectorAll(".glasses").forEach(el => el.style.opacity = 1)
+}, 500)
+
+/* white hair */
+setTimeout(()=>{
+document.querySelectorAll(".hair").forEach(el => el.style.opacity = 1)
+}, 1100)
+
+/* bend over */
+setTimeout(()=>{
+document.getElementById("boy").classList.add("old")
+document.getElementById("girl").classList.add("old")
+}, 1800)
+
+/* walking sticks */
+setTimeout(()=>{
+document.querySelectorAll(".stick").forEach(el => el.style.opacity = 1)
+}, 2500)
+
+/* slow shuffle */
+setTimeout(()=>{
+const boy = document.getElementById("boy")
+boy.style.transition = "transform 0.9s ease"
+girl.style.transition = "transform 0.9s ease"
+
+document.getElementById("boy").style.transform = "rotate(28deg) translateY(22px) translateX(6px)"
+document.getElementById("girl").style.transform = "rotate(-28deg) translateY(22px) translateX(-6px)"
+
+setTimeout(()=>{
+document.getElementById("boy").style.transform = "rotate(28deg) translateY(22px) translateX(-4px)"
+document.getElementById("girl").style.transform = "rotate(-28deg) translateY(22px) translateX(4px)"
+}, 900)
+
+}, 3100)
+
+}
+
+</script>
+</body>
+</html>

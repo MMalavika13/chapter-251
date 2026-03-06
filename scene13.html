@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+margin:0;
+background:#0c0c14;
+color:#eeeeff;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+height:100vh;
+}
+
+.text{
+position:absolute;
+width:360px;
+font-size:26px;
+opacity:0;
+transition:opacity 1s;
+line-height:1.55;
+}
+
+.center{
+top:45%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+font-size:38px;
+width:640px;
+color:rgba(220,210,255,0.95);
+text-shadow:0 0 60px rgba(200,180,255,0.2);
+}
+
+.topleft{ top:12%; left:8%; }
+.topright{ top:12%; right:8%; }
+.bottomright{ bottom:12%; right:8%; }
+.bottomleft{ bottom:12%; left:8%; }
+
+/* NO! */
+#noText{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+left:-260px;
+font-size:130px;
+font-weight:700;
+opacity:0;
+color:#ff5555;
+text-shadow:0 0 40px rgba(255,80,80,0.7);
+}
+
+/* ending */
+#ending{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:42px;
+opacity:0;
+text-align:center;
+width:600px;
+}
+
+/* egg */
+#egg{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+opacity:0;
+filter:drop-shadow(0 0 20px rgba(200,180,255,0.3));
+}
+
+/* photo */
+#photo{
+position:absolute;
+top:50%;
+left:50%;
+width:300px;
+transform:translate(-50%,-50%) scale(0) rotate(-720deg);
+opacity:0;
+border-radius:16px;
+transition:opacity 1s;
+box-shadow:0 0 60px rgba(180,160,255,0.3);
+}
+
+/* credits */
+#credits{
+position:absolute;
+bottom:-380px;
+width:100%;
+text-align:center;
+opacity:0;
+}
+
+#theEnd{
+font-size:52px;
+font-weight:700;
+margin-bottom:72px;
+color:rgba(220,210,255,0.9);
+text-shadow:0 0 40px rgba(200,180,255,0.3);
+letter-spacing:4px;
+}
+
+.creditLine{
+font-size:24px;
+margin:36px 0;
+color:rgba(220,210,255,0.75);
+letter-spacing:1px;
+}
+
+.scrollCredits{
+animation:scrollUp 22s linear forwards;
+opacity:1;
+}
+
+@keyframes scrollUp{
+0%  { transform:translateY(40vh); }
+100%{ transform:translateY(-180vh); }
+}
+
+/* duck */
+#duck{
+position:absolute;
+top:120%;
+left:50%;
+transform:translate(-50%,-50%);
+width:260px;
+opacity:1;
+z-index:50;
+cursor:pointer;
+animation:duckWiggle 2s ease-in-out infinite;
+transition:filter 0.2s;
+filter:drop-shadow(0 0 12px rgba(255,220,100,0.3));
+}
+
+#duck:hover{
+filter:drop-shadow(0 0 24px rgba(255,220,100,0.6));
+}
+
+@keyframes duckWiggle{
+0%  { transform:translate(-50%,-50%) rotate(-3deg); }
+50% { transform:translate(-50%,-50%) rotate(3deg); }
+100%{ transform:translate(-50%,-50%) rotate(-3deg); }
+}
+
+/* life line */
+#lifeLine{
+position:absolute;
+top:75%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:34px;
+opacity:0;
+white-space:nowrap;
+font-weight:700;
+letter-spacing:2px;
+}
+
+/* final fade */
+#finalFade{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:#0c0c14;
+opacity:0;
+pointer-events:none;
+transition:opacity 3s ease;
+z-index:9999;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="center" class="text center"></div>
+<div id="tl" class="text topleft"></div>
+<div id="tr" class="text topright"></div>
+<div id="br" class="text bottomright"></div>
+<div id="bl" class="text bottomleft"></div>
+
+<div id="noText">NO!</div>
+<div id="ending"></div>
+
+<div id="egg">
+<svg width="260" height="320" viewBox="0 0 260 320">
+<ellipse id="eggShell" cx="130" cy="160" rx="90" ry="130"
+stroke="rgba(220,210,255,0.8)" stroke-width="5" fill="none"/>
+<path id="crackLines"
+d="M120 90 L135 110 L120 130 L140 150 L125 170 L145 190 L130 210"
+stroke="rgba(220,210,255,0.9)" stroke-width="5" fill="none"
+stroke-dasharray="200" stroke-dashoffset="200"/>
+</svg>
+</div>
+
+<img id="photo" src="me.jpeg">
+
+<div id="credits">
+<div id="theEnd">The End!</div>
+<div class="creditLine">Made with extra coolness</div>
+<div class="creditLine">Had fun making this, LOL</div>
+<div class="creditLine">Hope you had a LMAO moment</div>
+<div class="creditLine">Really, it is all okay</div>
+<div class="creditLine">If my crash out texts bother you</div>
+<div class="creditLine">Just know that it bothers me too</div>
+<div class="creditLine">But probably not in ways you think</div>
+<div class="creditLine">Don't believe me?</div>
+<div class="creditLine">Click on the duck and you will know</div>
+<div class="creditLine">What duck you may ask</div>
+<div class="creditLine">Just wait</div>
+</div>
+
+<img id="duck" src="duckgif.gif">
+<div id="lifeLine"></div>
+<div id="finalFade"></div>
+
+<script>
+
+document.getElementById("duck").addEventListener("click", function(){
+window.open("https://www.instagram.com/reel/DTK2AmmE1Vs/?igsh=cXlqZGdndjE5bzFv","_blank")
+})
+
+function typeText(el, text, speed = 34){
+return new Promise(res => {
+el.innerHTML = ""
+el.style.opacity = 1
+let i = 0
+function t(){
+if(i < text.length){ el.innerHTML += text[i]; i++; setTimeout(t, speed) }
+else res()
+}
+t()
+})
+}
+
+function startColorCycle(){
+const line   = document.getElementById("lifeLine")
+const colors = ["#ff6b8a","#ffd93d","#6bffd9","#6bb8ff","#d96bff","#ffffff"]
+let ci = 0
+setInterval(()=>{ line.style.color = colors[ci]; ci = (ci+1) % colors.length }, 280)
+}
+
+function animateDuckEntrance(){
+return new Promise(res => {
+const duck = document.getElementById("duck")
+let y = 120, velocity = -1.8, bounces = 0
+function move(){
+velocity += 0.15
+y += velocity
+duck.style.top = y + "%"
+if(y > 55){ y = 55; velocity *= -0.6; bounces++ }
+if(bounces < 2){ requestAnimationFrame(move) }
+else{ duck.style.top = "55%"; res() }
+}
+move()
+})
+}
+
+function animateNo(){
+return new Promise(res => {
+const n = document.getElementById("noText")
+let x = -260
+n.style.opacity = 1
+function move(){
+x += 9
+n.style.left = x + "px"
+if(x < window.innerWidth + 260) requestAnimationFrame(move)
+else{ n.style.opacity = 0; res() }
+}
+move()
+})
+}
+
+function showCracks(){
+return new Promise(res => {
+const c = document.getElementById("crackLines")
+let off = 200
+function draw(){
+off -= 4
+c.style.strokeDashoffset = off
+if(off > 0) requestAnimationFrame(draw)
+else res()
+}
+draw()
+})
+}
+
+function shakeEgg(){
+return new Promise(res => {
+const egg = document.getElementById("egg")
+let k = 0
+function shake(){
+const x = (Math.random() * 26) - 13
+const r = (Math.random() * 22) - 11
+egg.style.transform = `translate(calc(-50% + ${x}px), -50%) rotate(${r}deg)`
+k++
+if(k < 70) requestAnimationFrame(shake)
+else{ egg.style.transform = "translate(-50%,-50%)"; res() }
+}
+shake()
+})
+}
+
+function burstEgg(){
+document.getElementById("eggShell").style.opacity  = 0
+document.getElementById("crackLines").style.opacity = 0
+}
+
+function hatchPhoto(){
+return new Promise(res => {
+const p = document.getElementById("photo")
+let s = 0, r = -720
+p.style.opacity = 1
+function grow(){
+s += 0.03; r += 20
+p.style.transform = `translate(-50%,-50%) scale(${s}) rotate(${r}deg)`
+if(s < 1) requestAnimationFrame(grow)
+else{ p.style.transform = "translate(-50%,-50%) scale(1) rotate(0deg)"; res() }
+}
+grow()
+})
+}
+
+function startCredits(){
+const c = document.getElementById("credits")
+c.style.opacity = 1
+c.classList.add("scrollCredits")
+setTimeout(async () => {
+await animateDuckEntrance()
+const life = document.getElementById("lifeLine")
+await typeText(life,"Life goes on and on and on....")
+startColorCycle()
+setTimeout(()=>{
+const m1 = parent.document.getElementById("music1")
+const m2 = parent.document.getElementById("music2")
+if(m1){ let f=setInterval(()=>{ if(m1.volume>0.05){m1.volume-=0.05}else{m1.pause();clearInterval(f)} },120) }
+if(m2){ let f=setInterval(()=>{ if(m2.volume>0.05){m2.volume-=0.05}else{m2.pause();clearInterval(f)} },120) }
+document.getElementById("finalFade").style.opacity = 1
+}, 15000)
+}, 16000)
+}
+
+async function start(){
+
+const center = document.getElementById("center")
+
+await typeText(center,"But then it all gets better")
+await new Promise(r => setTimeout(r, 1800))
+center.style.opacity = 0
+await new Promise(r => setTimeout(r, 1000))
+
+await typeText(document.getElementById("tl"),"We learn to handle situations better")
+await new Promise(r => setTimeout(r, 900))
+
+await typeText(document.getElementById("tr"),"We show up better")
+await new Promise(r => setTimeout(r, 900))
+
+await typeText(document.getElementById("br"),"We see people through their lived experiences")
+await new Promise(r => setTimeout(r, 900))
+
+await typeText(document.getElementById("bl"),"And we make peace with everything")
+await new Promise(r => setTimeout(r, 2200))
+
+center.style.opacity = 1
+await typeText(center,"Could we have known if we did not mess up a bit?")
+await new Promise(r => setTimeout(r, 2500))
+
+document.querySelectorAll(".text").forEach(e => e.style.opacity = 0)
+await new Promise(r => setTimeout(r, 1200))
+
+await animateNo()
+
+const ending = document.getElementById("ending")
+
+await typeText(ending,"Now, all I am saying is")
+await new Promise(r => setTimeout(r, 1400))
+ending.style.opacity = 0
+await new Promise(r => setTimeout(r, 600))
+
+await typeText(ending,"Fuck It")
+await new Promise(r => setTimeout(r, 1200))
+ending.style.opacity = 0
+await new Promise(r => setTimeout(r, 600))
+
+await typeText(ending,"It is all chill :)")
+await new Promise(r => setTimeout(r, 1200))
+ending.style.opacity = 0
+
+const egg = document.getElementById("egg")
+egg.style.opacity = 1
+
+await showCracks()
+await shakeEgg()
+burstEgg()
+await hatchPhoto()
+await new Promise(r => setTimeout(r, 4000))
+
+document.getElementById("photo").style.opacity = 0
+await new Promise(r => setTimeout(r, 1000))
+
+startCredits()
+
+}
+
+start()
+
+</script>
+</body>
+</html>

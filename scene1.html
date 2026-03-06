@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+}
+
+#text{
+font-size:84px;
+font-weight:700;
+letter-spacing:3px;
+border-right:4px solid rgba(255,255,255,0.85);
+padding-right:12px;
+white-space:nowrap;
+animation:cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink{
+0%,100%{ border-color:rgba(255,255,255,0.85); }
+50%{ border-color:transparent; }
+}
+
+.done{
+border-color:transparent !important;
+animation:none !important;
+text-shadow:0 0 60px rgba(220,210,255,0.35);
+}
+
+</style>
+</head>
+
+<body>
+<div id="text"></div>
+
+<script>
+const sentence = "Baad mein?"
+let i = 0
+
+function type(){
+if(i < sentence.length){
+document.getElementById("text").textContent += sentence.charAt(i)
+i++
+setTimeout(type, 120)
+}else{
+const el = document.getElementById("text")
+el.classList.add("done")
+}
+}
+
+setTimeout(type, 500)
+</script>
+
+</body>
+</html>

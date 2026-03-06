@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{ box-sizing:border-box; }
+
+body{
+margin:0;
+background:#0c0c14;
+overflow:hidden;
+font-family:'Space Mono',monospace;
+}
+
+iframe{
+width:100%;
+height:100vh;
+border:none;
+opacity:1;
+transition:opacity 1.5s ease;
+}
+
+iframe.fade{
+opacity:0;
+}
+
+@media(max-width:700px){
+body{ padding:4vh 4vw; }
+iframe{ height:calc(100vh - 8vh); }
+}
+
+/* vignette */
+
+#vignette{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%);
+pointer-events:none;
+z-index:5;
+}
+
+/* start screen */
+
+#startScreen{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:#0c0c14;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:10;
+gap:0;
+}
+
+#startLabel{
+font-size:11px;
+letter-spacing:8px;
+color:rgba(255,255,255,0.25);
+text-transform:uppercase;
+margin-bottom:48px;
+animation:labelPulse 4s ease-in-out infinite;
+}
+
+@keyframes labelPulse{
+0%,100%{ opacity:0.25; }
+50%{ opacity:0.6; }
+}
+
+#startButton{
+padding:14px 52px;
+font-size:14px;
+font-family:'Space Mono',monospace;
+background:transparent;
+color:rgba(255,255,255,0.85);
+border:1px solid rgba(255,255,255,0.25);
+cursor:pointer;
+letter-spacing:6px;
+text-transform:uppercase;
+transition:all 0.35s ease;
+}
+
+#startButton:hover{
+background:rgba(255,255,255,0.06);
+border-color:rgba(255,255,255,0.7);
+color:white;
+box-shadow:0 0 40px rgba(255,255,255,0.08);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="vignette"></div>
+
+<div id="startScreen">
+<div id="startLabel">a little story</div>
+<button id="startButton">Let's Go</button>
+</div>
+
+<audio id="music1" src="kalimba.mp3"></audio>
+<audio id="music2" src="ilahi.mp3"></audio>
+
+<iframe id="player"></iframe>
+
+<script>
+
+const music1 = document.getElementById("music1")
+const music2 = document.getElementById("music2")
+const frame  = document.getElementById("player")
+
+const scenes = [
+{file:"scene1.html",  duration:3000},
+{file:"scene2.html",  duration:6500},
+{file:"scene3.html",  duration:6500},
+{file:"scene4.html",  duration:7000},
+{file:"scene5.html",  duration:4000},
+{file:"scene6.html",  duration:5500},
+{file:"scene7.html",  duration:4500},
+{file:"scene8.html",  duration:7000},
+{file:"scene9.html",  duration:7000},
+{file:"scene10.html", duration:7000},
+{file:"scene11.html", duration:12000},
+{file:"scene12.html", duration:32000},
+{file:"scene13.html", duration:47000}
+]
+
+let index = 0
+
+const startButton = document.getElementById("startButton")
+const startScreen = document.getElementById("startScreen")
+
+startButton.addEventListener("click", async () => {
+
+music1.volume = 1
+music2.volume = 0
+
+try{ await music1.play() }catch(e){}
+
+startScreen.style.transition = "opacity 1.2s ease"
+startScreen.style.opacity = "0"
+setTimeout(() => startScreen.style.display = "none", 1200)
+
+setTimeout(startAnimation, 4000)
+
+})
+
+function startAnimation(){
+frame.src = scenes[0].file
+setTimeout(nextScene, scenes[0].duration)
+}
+
+function nextScene(){
+if(index >= scenes.length - 1) return
+frame.classList.add("fade")
+setTimeout(() => {
+index++
+frame.src = scenes[index].file
+frame.classList.remove("fade")
+setTimeout(nextScene, scenes[index].duration)
+}, 1000)
+}
+
+window.addEventListener("message", (event) => {
+if(event.data === "changeMusic") crossfadeMusic()
+})
+
+function crossfadeMusic(){
+music2.currentTime = 27
+music2.play()
+let fade = setInterval(() => {
+if(music1.volume > 0.05){
+music1.volume -= 0.05
+music2.volume += 0.05
+}else{
+music1.pause()
+clearInterval(fade)
+}
+}, 100)
+}
+
+</script>
+
+</body>
+</html>

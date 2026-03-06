@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+background:#0c0c14;
+color:#eeeeff;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:'Space Mono',monospace;
+overflow:hidden;
+}
+
+#text{
+font-size:40px;
+margin-bottom:64px;
+letter-spacing:1px;
+border-right:3px solid rgba(255,255,255,0.8);
+padding-right:10px;
+white-space:nowrap;
+animation:cursorBlink 1s step-end infinite;
+min-height:1.2em;
+}
+
+@keyframes cursorBlink{
+0%,100%{ border-color:rgba(255,255,255,0.8); }
+50%{ border-color:transparent; }
+}
+
+.done{ border-color:transparent !important; animation:none !important; }
+
+.stage{
+position:relative;
+width:500px;
+height:280px;
+}
+
+#globe{
+position:absolute;
+left:50%;
+top:80px;
+transform:translateX(-50%);
+opacity:0;
+transition:opacity 0.6s ease;
+filter:drop-shadow(0 0 14px rgba(180,200,255,0.45));
+}
+
+#star{
+position:absolute;
+left:50%;
+top:106px;
+transform:translate(-50%,-50%);
+font-size:44px;
+opacity:0;
+transition:opacity 0.3s ease;
+filter:drop-shadow(0 0 8px rgba(255,220,100,0.7));
+}
+
+#boom{
+font-size:84px;
+font-weight:700;
+opacity:0;
+margin-top:16px;
+letter-spacing:10px;
+color:#ff6b6b;
+text-shadow:0 0 30px rgba(255,80,80,0.9), 0 0 80px rgba(255,80,80,0.4);
+}
+
+.fragment{
+position:absolute;
+border-radius:50%;
+opacity:0;
+}
+
+#flash{
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:white;
+opacity:0;
+pointer-events:none;
+z-index:999;
+transition:opacity 0.06s;
+}
+
+@keyframes shake{
+0%  { transform:translate(0,0) rotate(0deg); }
+15% { transform:translate(-9px,5px) rotate(-1deg); }
+30% { transform:translate(9px,-5px) rotate(1deg); }
+45% { transform:translate(-7px,7px) rotate(-0.5deg); }
+60% { transform:translate(7px,-3px) rotate(0.5deg); }
+75% { transform:translate(-4px,4px) rotate(-0.3deg); }
+100%{ transform:translate(0,0) rotate(0deg); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="flash"></div>
+<div id="text"></div>
+
+<div class="stage">
+
+<svg id="globe" width="150" height="150">
+<!-- outer circle -->
+<circle cx="75" cy="75" r="60" stroke="white" stroke-width="2.5" fill="none"/>
+<!-- vertical oval -->
+<ellipse cx="75" cy="75" rx="32" ry="60" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none"/>
+<!-- equator -->
+<line x1="15" y1="75" x2="135" y2="75" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+<!-- tropic lines -->
+<line x1="24" y1="48" x2="126" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+<line x1="24" y1="102" x2="126" y2="102" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+</svg>
+
+<div id="star">★</div>
+
+</div>
+
+<div id="boom"></div>
+
+<script>
+
+const sentence = "Baad mein world war ho jayega"
+const textEl   = document.getElementById("text")
+const globe    = document.getElementById("globe")
+const star     = document.getElementById("star")
+const boom     = document.getElementById("boom")
+const flash    = document.getElementById("flash")
+
+let i = 0
+function type(){
+if(i < sentence.length){
+textEl.textContent += sentence.charAt(i)
+i++
+setTimeout(type, 72)
+}else{
+textEl.classList.add("done")
+setTimeout(showGlobe, 450)
+}
+}
+type()
+
+function showGlobe(){
+globe.style.opacity = 1
+setTimeout(showStar, 700)
+}
+
+function showStar(){
+star.style.opacity = 1
+setTimeout(typeBoom, 380)
+}
+
+const boomWord = "BOOM"
+let b = 0
+function typeBoom(){
+boom.style.opacity = 1
+if(b < boomWord.length){
+boom.textContent += boomWord.charAt(b)
+b++
+setTimeout(typeBoom, 100)
+}else{
+setTimeout(explode, 180)
+}
+}
+
+function explode(){
+
+/* screen flash */
+flash.style.opacity = 0.95
+setTimeout(()=>{ flash.style.transition="opacity 0.45s"; flash.style.opacity=0 }, 60)
+
+/* screen shake */
+document.body.style.animation = "shake 0.45s ease"
+
+globe.style.opacity = 0
+star.style.opacity  = 0
+
+const colors = ["#ff6b6b","#ffd93d","#ff9f43","#ff4757","#ffffff","#ff6348"]
+const stage  = document.querySelector(".stage")
+
+for(let k = 0; k < 110; k++){
+const piece = document.createElement("div")
+piece.className = "fragment"
+const sz = 3 + Math.random() * 7
+piece.style.cssText = `
+width:${sz}px; height:${sz}px;
+background:${colors[Math.floor(Math.random()*colors.length)]};
+left:250px; top:140px; opacity:1;
+box-shadow:0 0 6px ${colors[Math.floor(Math.random()*colors.length)]};
+`
+stage.appendChild(piece)
+const angle    = Math.random() * Math.PI * 2
+const distance = 70 + Math.random() * 170
+piece.animate([
+{transform:"translate(0,0) scale(1)", opacity:1},
+{transform:`translate(${Math.cos(angle)*distance}px,${Math.sin(angle)*distance}px) scale(0.3)`, opacity:0}
+],{
+duration: 800 + Math.random() * 600,
+easing:   "cubic-bezier(0.1,0.8,0.3,1)"
+})
+}
+}
+
+</script>
+</body>
+</html>
